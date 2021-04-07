@@ -3,3 +3,4 @@
 
 # 기본 출력(Ctrl + shift + b)
 print('Hello Python!') 
+print('hello')
