@@ -131,6 +131,177 @@ print(BST.search(-2))
 
 # 2. 삭제할 Node의 왼쪽 자식 중, 가장 큰 값을 삭제할 Node의 Parent Node가 가리키도록 한다
 
+# 5.5 이진 탐색 트리 삭제 코드 구현과 분석
+# 1) 삭제할 Node가 없는 경우도 처리해야 한다.
+# - 이를 위해 삭제할 Node가 없는 경우는 False를 리턴하고, 함수 종료
+
+# def delete(self, value):
+searched = False # 삭제할 Node의 상태를 의미
+self.current_node = self.head # 삭제할 Node
+self.parent = self.head # 삭제할 Node의 부모Node를 의미
+while self.current_node:# Node가 존재할 경우 실행
+    if self.current_node.value == value: # 해당 Node를 찾은 경우
+        searched = True
+        break
+    elif value < self.current_node.value: # 입력받은 값이 해당 위 값보다 작을 경우 즉, 왼쪽에 있는 경우
+        self.parent = self.current_node
+        self.current_node = self.current_node.left
+    else:
+        self.parent = self.current_node
+        self.current_node = self.current_node.right
+
+
+if searched == False:
+    return False
+
+## 이후부터 Case들을 분리해서 코드 작성 ##
+
+# 5.5-2
+# Case1 : 삭제할 Node가 Leaf Node인 경우
+# current_node = 삭제할 Node
+# parent_node = 삭제할 Node의 부모
+
+# self.current_node가 삭제할 Node
+# self.parent는 삭제할 Node의 Parent Node인 상태
+if self.current_node.left == None and self.current_node == None :
+    if value < self.parent_node:
+        self.parent_left = None
+    else : 
+        self.parent_right = None
+    del self.current_node # 객체 메모리상에서도 삭제
+
+# 5.5-3 
+# Case2 : 삭제할 Node가 Child Node를 한 개 가지고 있을 경우
+# type1 : 삭제할 Node의 Child Node가 왼쪽에 있는 경우 
+# type2 : 삭제할 Node의 Child Node가 오른쪽에 있는 경우
+# parent_node : 가장 상단에 있는 Node
+# current_node: 상단 아래에 있는 Node
+# current_node_left   : 가장 아래에 있는 왼쪽 Node
+# current_node_right  : 가장 아래에 있는 오른쪽 Node
+
+# 1) 삭제할 Node의 Child Node가 왼쪽에 있는 경우(자신보다 작은값의 경우)
+if self.current_node_left != None and self.current_node_right == None :
+    # 입력 받은 값이 삭제할 Node의 값보다 작은 경우
+    if value < self.parent.value: 
+        # 가장 상단에 있는 값이랑 연결되어야 하기 때문에 
+        # parent_left에는
+        # 삭제할 Node의 왼쪽에 위치해 있는 Child Node값을 연결해준다.
+        self.parent_left = self.current_node_left
+    else:
+        self.parent_right = self.current_node_left
+# 2) 삭제할 Node의 Child Node가 오른쪽에 있는 경우(자신보다 큰 값의 경우)
+elif self.current_node_right != None and self.current_node_left == None:
+    if value < self.parent.value:
+        self.parent_left = self.current_node_right
+    else :
+        self.parent_right = self.current_node_right
+
+# 5.5-3 
+# Case3 : 삭제할 Node가 Child Node를 두 개 가지고 있을 경우(삭제할 Node가 Parent Node 왼쪽에 있을 경우)
+# 1. 기본 사용 가능 전략
+# 1) 삭제할 Node의 오른쪽 자식 중, 가장 작은 값을 삭제할 Node의 Parent Node가 가리키도록 한다
+# 2) 삭제할 Node의 왼쪽 자식 중, 가장 큰 값을 삭제할 Node의 Parent Node가 가리키도록 한다
+
+# 2. 기본 사용 가능 전략 중, 1번 전략을 사용하여 코드를 구현
+# 경우의 수가 또 다시 두가지가 있음
+# Case3-1-1 : 삭제할 Node가 Parent Node의 왼쪽에 있고, 삭제할 Node의 오른쪽 자식 중, 
+#             가장 작은 값을 가진 Node의 Child Node가 없을 때
+
+# Case3-1-2 : 삭제할 Node가 Parent Node의 왼쪽에 있고, 삭제할 Node의 오른쪽 자식 중,
+#             가장 작은 값을 가진 Node의 오른쪽에 Child Node가 있을 때
+# 가장 작은 값을 가진 Node의 Child Node가 왼쪽에 있을 경우는 없음 이유는 왼쪽 Node가 있다는 것은
+# 해당 Node보다 더 작은 값을 가진 Node가 있다는 뜻
+
+# 1) 삭제할 Node가 Child Node를 두개 가지고 있는 경우 
+# Case3
+if self.current_node_left != None and self.current_node_right != None :
+    # case 3-1
+    # 1) 삭제할 Node가 왼쪽에 있는 경우
+    if value < self.parent.value: 
+        self.change_node = self.current_node.right
+        self.change_node_parent = self.current_node_right
+        
+        # 가장 작은값을 찾기 위해 순환
+        # change_node에 왼쪽에 값이 있는 경우 실행
+        while self.change_node_left != None: 
+            self.change_node_parent = self.change_node
+            self.change_node = self.change_node_left
+        self.change_node_parent.left = None
+        
+        if self.change_node_right != None:
+            # change_node_right를 change_node_parent에 왼쪽에 위치시킨다.
+            self.change_node_parent.left = self.change_node_right
+        else :
+            self.change_node_parent.left = None
+
+        self.parent_left = self.change_node # 가장 상단에 있는 Parent Node의 왼쪽에 배치
+
+        # change Node가 가장 상단 Parent Node의 왼쪽에 위치 후 
+        # change Node_left 와 right와 연결해야 한다.
+        self.change_node_right = self.current_node_right
+        self.change_node_left = self.change_node_left
+
+    # 2) 삭제할 Node가 오른쪽에 있는 경우
+    else :
+        self.change_node = self.current_node_right
+        self.change_node_parent = self.current_node_right
+
+        # 가장 작은 값을 찾기 위해 순환
+        while self.change_node_left != None:
+            self.change_node_parent = self.change_node
+            self.change_node = self.change_node_left
+        if self.change_node_right != None:
+            self.change_node_parent.left = self.change_node_parent_right
+        else:
+            self.change_node_parent.left = None
+        self.parnet_node_right = self.change_node
+        self.change_node_left = self.current_node_left
+        self.change_node_right = self.current_node_right
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
