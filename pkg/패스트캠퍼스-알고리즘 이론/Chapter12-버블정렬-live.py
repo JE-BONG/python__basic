@@ -32,22 +32,22 @@
 #         print(num)
 # ---------------------------------------------------------------------------
 
-def bubblesort(data):
-    for index in range(len(data)-1):
-        swap = False
-        for index2 in range(len(data) - index - 1):
-            if data[index2] > data[index2+1]:
-                data[index2],data[index2+1] = data[index2+1],data[index2]
-                swap = True
-        if swap == False:
-            break
-    return data
+# def bubblesort(data):
+#     for index in range(len(data)-1):
+#         swap = False
+#         for index2 in range(len(data) - index - 1):
+#             if data[index2] > data[index2+1]:
+#                 data[index2],data[index2+1] = data[index2+1],data[index2]
+#                 swap = True
+#         if swap == False:
+#             break
+#     return data
     
-import random
-# random.sample : list() 형식으로 0 ~ 99개 중 50개를 랜덤으로 넣는다.
-for index in range(3):
-    data_list = random.sample(range(100), 50)
-    print(bubblesort(data_list))
+# import random
+# # random.sample : list() 형식으로 0 ~ 99개 중 50개를 랜덤으로 넣는다.
+# for index in range(3):
+#     data_list = random.sample(range(100), 50)
+#     print(bubblesort(data_list))
 
 # ---------------------------------------------------------------------------
 
@@ -64,9 +64,17 @@ for index in range(3):
 #       swap = True
 #   if swap == False : 
 #      break 
-#   정렬이 되어 있다는 의미로 for문 종료
+#   정렬이 되어 있다는 의미로 for문 종료/
 
 # 5. 알고리즘 분석
 # 1) 반복문이 두개 이므로 O(n2)
 # 2) 완전 정렬이 된 경우 : O(n)
+
+
+
+
+
+
+
+
 
